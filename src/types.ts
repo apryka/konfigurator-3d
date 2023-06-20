@@ -4,3 +4,11 @@ export enum DIRECTION {
   SOUTH,
   WEST,
 };
+
+export enum VIEW {
+  Size = "SIZE",
+  Photo = "PHOTO",
+  Products = "PRODUCTS",
+};
+
+export type RoomSize = [number, number];

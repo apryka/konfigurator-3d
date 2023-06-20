@@ -1,17 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&family=Noto+Serif:ital@0;1&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Manrope, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #EBECED;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --black: 0 0 0;
+  --black2: 46 45 45;
+  --black3: 100 100 100;
+  --black-via: 87 87 87;
+  --tag: 67 67 67;
+  --white: 255 255 255;
+  --pearl: 242 244 245;
+  --grey-light: 242 242 242;
+  --grey-medium: 188 187 187;
+  --yellow: 255 222 68;
+  --yellow-hover: 255 193 14;
+  --gray1: 242 244 245;
+  --gray2: 34 34 34;
+  --gray3: 171 171 171;
+  --gray4: 128 128 128;
+  --gray5: 204 202 200;
+  --gray6: 205 200 200;
+  --gray7: 56 55 55;
+  --error: 251 89 89;
 }
 
 a {
@@ -25,9 +52,9 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  /* display: flex; */
+  /* place-items: center; */
+  /* min-width: 320px; */
   min-height: 100vh;
 }
 
@@ -66,4 +93,8 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+body {
+  @apply font-manrope bg-[#EBECED] scroll-smooth;
 }

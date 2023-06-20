@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 30 30">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_9730" data-name="Rectangle 9730" width="30" height="30" transform="translate(0 0.116)" fill="none" stroke="#707070" stroke-width="1.5"/>
+    </clipPath>
+  </defs>
+  <g id="Group_39421" data-name="Group 39421" transform="translate(0 -0.116)">
+    <g id="Group_39420" data-name="Group 39420" clip-path="url(#clip-path)">
+      <rect id="Rectangle_9726" data-name="Rectangle 9726" width="12" height="6" rx="2" transform="translate(1 1.116)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <rect id="Rectangle_9727" data-name="Rectangle 9727" width="12" height="17" rx="2" transform="translate(1 12.116)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <rect id="Rectangle_9728" data-name="Rectangle 9728" width="11" height="7" rx="2" transform="translate(18 22.116)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <rect id="Rectangle_9729" data-name="Rectangle 9729" width="11" height="16" rx="2" transform="translate(18 1.116)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>

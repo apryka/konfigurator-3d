@@ -5,6 +5,7 @@ import { Plane } from '@react-three/drei';
 
 import { DIRECTION } from '../types';
 import { TextureContext } from '../context/TextureContext';
+import { AppContext } from '../context/AppContext';
 
 export interface WallProps {
   roomSize: [number, number, number];
@@ -13,7 +14,8 @@ export interface WallProps {
 }
 
 export function Wall({ roomSize, direction, color }: WallProps) {
-  const texture = useContext(TextureContext);
+  // const texture = useContext(TextureContext);
+  const { texture } = useContext(AppContext);
   const materialRef = useRef<any>();
 
   useEffect(() => {

@@ -1,184 +1,101 @@
-import React, { useState, Suspense, useEffect } from 'react';
+import { useState } from 'react';
+import useSWR from 'swr';
 
-import { useControls, folder } from 'leva';
+import { Photo } from './views/Photo';
+import { Size } from './views/Size';
+import { Products } from './views/Products';
+import { Placeholder } from './components/Placeholder';
+import { Configurator } from './components/Configurator';
 
-import * as THREE from 'three';
-import { Canvas} from '@react-three/fiber';
-import { Box, OrbitControls, Bounds} from '@react-three/drei';
-import { Selection, Select, EffectComposer, Outline } from '@react-three/postprocessing';
-import { nanoid } from 'nanoid';
+import addPhotoIcon from './assets/add-photo.svg';
+import productsIcon from './assets/products.svg';
+import sizeIcon from './assets/size.svg';
+import { RoomSize, VIEW } from './types';
 
-import { TextureContext } from './context/TextureContext';
-
-import { Room, DraggableObject } from './components';
-// import Bulldog3 from './models/Bulldog3';
-// import { Bulldog2 } from './models/Bulldog2';
-import { useModels } from './components/useModels';
+import { AppContext } from './context/AppContext';
+import { fetcher } from './utils/fetcher';
 
 
-import './App.css';
+export const API = {
+  translations: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/cms/pages/mobile?path=settings',
+  categories: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/categories',
+  products: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/products/search',
+};
 
-type Model = {
-  name: string;
-  id: string;
-  rotation: number;
-}
 
 function App() {
-  // const { roomSize, floorColor, wallsColor } = useControls('Room', {
-  //   roomSize: [8, 3, 6],
-  //   floorColor: '#aaa',
-  //   wallsColor: '#fff',
-  // });
-
-  const [{roomSize, floorColor, wallsColor}, set] = useControls(() => ({
-    'Room': folder({
-      roomSize: [8, 3, 6],
-      floorColor: '#aaa',
-      wallsColor: '#fff',
-    })
-  }))
-
-  const { backgroundColor } = useControls('Misc', {
-    backgroundColor: '#103045',
-  });
- 
-  const [orbitControlsDisabled, setOrbitControlsDisabled] = React.useState(false);
-
-  const roomBounds = React.useMemo(() => ({
-    min: new THREE.Vector3(0, 0, 0),
-    max: new THREE.Vector3(roomSize[0], 0, roomSize[2]),
-  }), [roomSize]);
-
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
-
-  const [listOfModels, setListOfModels] = useState<string[]>([]);
-  const [models, setModels] = useState<Model[]>([]);
-  const [selectedItem, setSelectedItem] = useState('');
+  const [view, setView] = useState<VIEW>();
+  const [roomSize, setRoomSize] = useState<RoomSize>();
   const [texture, setTexture] = useState<string>('');
+  const [models, setModels] = useState<any[]>();
+  const [activeSection, setActiveSection] = useState(true);
 
-  const [addLoadedModel, loadedModels] = useModels();
-  
-  useEffect(() => {
-    import('./models')
-      .then(({ list }) => setListOfModels(list))
-      .catch(() => setListOfModels([]));
-  }, []);
+  const { data: translationsData, error:_translationsDataError, isLoading: translationsDataIsLoading } = useSWR(API.translations, fetcher);
+  const translations = translationsData?.contentSections[0].properties;
+  const { data: categoriesData, error:_categoriesDataError, isLoading: _categoriesDataIsLoading } = useSWR(API.categories, fetcher);
 
-  const addModel = (model:string) => {
-    addLoadedModel(model);
-    setModels((state) => [...state, {name: model, id: nanoid() , rotation: 0}])
-  }
-
-  const handleDblClick = (_e:any, id: string) => {
-    setSelectedItem(selectedItem => selectedItem ? '' : id);
-  }
-
-  const removeHandler = (id:string) => {
-    setSelectedItem('');
-    const newState = models.filter(model => model.id !== id);
-    setModels(newState);
-  };
-
-  const rotateHandler = (id:string) => {
-    setModels(state => (state.map(model => model.id === id ? {...model, rotation: model.rotation + 90} : model)));
-  };
-
-  function handleImageUpload(e:any) {
-      console.log(e.target.files);
-      setTexture(URL.createObjectURL(e.target.files[0]));
+  const handleTextureImage = (texture:string) => {
+    setTexture(texture);
   }
 
   return (
-    <div className="App" style={{ backgroundColor }}>
-      <TextureContext.Provider value={texture}>
-      <Canvas shadows ref={canvasRef}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[3, 2, 3]} intensity={0.5} castShadow name='light' />
+    <AppContext.Provider value={{
+      translations,
+      categories: categoriesData,
+      models,
+      texture,
+      roomSize,
+    }}>
+    <main className="bg-[#EBECED] font-manrope text-ed-black2 flex flex-col min-h-screen">
 
-        <OrbitControls makeDefault maxPolarAngle={Math.PI / 2} enabled={!orbitControlsDisabled} />
-        <Bounds fit clip observe damping={6} name='bounds'>
-          <Room roomSize={roomSize} floorColor={floorColor} wallsColor={wallsColor} />
+      {roomSize ? <Configurator /> : <Placeholder />}
 
-            <Selection>
-              <EffectComposer multisampling={8} autoClear={false}>
-                <Outline blur visibleEdgeColor={0xffffff} edgeStrength={100} width={500} />
-              </EffectComposer>
+      <section className={`bg-ed-white text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] font-manrope px-4 py-[60px] mt-auto pb-[150px] absolute inset-0 transition-transform ${activeSection ? "translate-y-[50vh]" : "translate-y-[calc(100vh_-_150px)]"}`}>
 
-            <Suspense>
-            {/* <DraggableObject bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled}>
-              <Box args={[1, 1, 1]} castShadow receiveShadow scale={0.0125}>
-              <Bulldog2 />
-              </Box>
-              </DraggableObject> */}
-              
-            {
-              models.map((model) => {
-                const Model = loadedModels[model.name] as any;
-                return Model ? (<DraggableObject key={model.id} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={(e:any) => handleDblClick(e, model.id)}><Select enabled={model.id === selectedItem}><Box castShadow receiveShadow scale={0.0125} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></Box></Select></DraggableObject>) : null;
-              
-            })
-            }
-          </Suspense>
+        <button type='button' className='rounded-full w-[100px] h-[10px] bg-[#ECEDEE] absolute top-4 left-[50%] -translate-x-1/2' onClick={() => setActiveSection(!activeSection)}></button>
 
-            </Selection>
-          
+        {view === VIEW.Size && <Size size={roomSize} setSize={setRoomSize} />}
+        {view === VIEW.Photo && <Photo setImage={handleTextureImage} />}
+        {view === VIEW.Products && <Products />}
+            
+      </section>
 
-          
-        </Bounds>
-      </Canvas>
-      </TextureContext.Provider>
-      {selectedItem && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '10px 20px', background: 'white', position: 'absolute', bottom: 50, left: 10}}>
-          <button type='button' onClick={() => removeHandler(selectedItem)}>Remove object</button>
-          <button type='button' onClick={() => rotateHandler(selectedItem)}>Rotate object</button>
-        </div>
-      )}
-      <div style={{ position: 'absolute', top: 20, zIndex: 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10}}>
-          {listOfModels.map((model, idx) => <li key={`${model}-${idx}`}>
-            <button type='button' onClick={() => addModel(model)}>Add {model}</button>
-          </li>)}
-        </ul>
-        <div>
-          Room size
-          <label style={{ display: 'block'}}>
-            x
-            <input type='number' min={0} value={roomSize[0]} onChange={(e) => set({ roomSize: [e.target.valueAsNumber, roomSize[1], roomSize[2]] })} />
-          </label>
-          <label style={{ display: 'block'}}>
-            y
-            <input type='number' min={0} value={roomSize[1]} onChange={(e) => set({ roomSize: [roomSize[0], e.target.valueAsNumber, roomSize[2]] })} />
-          </label>
-          <label style={{ display: 'block'}}>
-            z
-            <input type='number' min={0} value={roomSize[2]} onChange={(e) => set({ roomSize: [roomSize[0], roomSize[1], e.target.valueAsNumber] })}  />
-          </label>
-        </div>
-        <div>
-          <label style={{ display: 'block'}}>
-            Floor color
-            <input type='color' value={floorColor} onChange={(e) => set({ floorColor: e.target.value })}/>
-          </label>
-        </div>
-        <div>
-          <label style={{ display: 'block'}}>
-            Walls color
-            <input type='color' value={wallsColor} onChange={(e) => set({ wallsColor: e.target.value })}/>
-          </label>
-        </div>
-        <div>
-          <h2>Add Image:</h2>
-          <input type="file" onChange={handleImageUpload} />
-          
-          {texture && <>
-            <img src={texture} alt='texture' style={{ width: 100, height: 100, objectFit: 'cover'}} />
-          </>}
-        </div>
-
+      <div className='fixed z-20 bottom-0 left-0 w-full bg-[#dedede] text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] h-[90px]'>
+        <nav>
+          <ul className='flex gap-4 items-center justify-center text-sm leading-tight'>
+            <li>
+              <button 
+                className={`bg-none bg-transparent rounded-0 border-0 flex items-center flex-col p-[20px] px-[10px] transition-opacity ${view === VIEW.Size ? "opacity-100" : "opacity-50"}`}
+                onClick={() => setView(VIEW.Size)}    
+              >
+                <img src={sizeIcon} alt='wymiary lokalu' className='w-[25px] mb-2' />
+                {!translationsDataIsLoading && <span>{translations?.find(({ id }: {id:string}) => id === 'menu-store-size')?.value}</span>}
+              </button>
+            </li>
+            <li>
+              <button 
+                className={`bg-none bg-transparent rounded-0 border-0 flex items-center flex-col py-[20px] px-[10px] transition-opacity ${view === VIEW.Photo ? "opacity-100" : "opacity-50"}`}
+                onClick={() => setView(VIEW.Photo)}  
+              >
+                <img src={addPhotoIcon} alt='zdjęcie lokalu' className='w-[25px] mb-2' />
+                {!translationsDataIsLoading && <span>{translations?.find(({ id }: {id:string}) => id === 'menu-photo')?.value}</span>}
+              </button>
+            </li>
+            <li>
+              <button 
+                className={`bg-none bg-transparent rounded-0 border-0 flex items-center flex-col p-[20px] px-[10px] transition-opacity ${view === VIEW.Products ? "opacity-100" : "opacity-50"}`}
+                onClick={() => setView(VIEW.Products)}  
+              >
+                <img src={productsIcon} alt='dostępne produkty' className='w-[25px] mb-2' />
+                {!translationsDataIsLoading && <span>{translations?.find(({ id }: {id:string}) => id === 'menu-products')?.value}</span>}
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
-    </div>
-  );
+    </main>
+    </AppContext.Provider>
+  )
 }
 
 export default App;
