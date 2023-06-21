@@ -71,7 +71,10 @@ function App() {
         <button
          type='button' 
          className='absolute top-0 left-[1rem] translate-y-[calc(-100%_-_10px)] flex gap-1 rounded-[4px] bg-ed-white px-2 py-4 hover:bg-ed-yellow cursor-pointer'
-         onClick={() => setTooltip(!tooltip)}
+         onClick={(e) => {
+            e.stopPropagation();
+            setTooltip(!tooltip);
+          }}
          >
           <span className='block w-2 h-2 rounded-full border border-ed-black2'></span>
           <span className='block w-2 h-2 rounded-full border border-ed-black2'></span>
