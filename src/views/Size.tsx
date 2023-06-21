@@ -17,11 +17,11 @@ export const Size: React.FC<SizeProps> = ({ size, setSize }) => {
         <div className='flex flex-wrap gap-4'>
         <label className='text-[15px] leading-[20px] flex flex-col flex-1 text-left'>
           {translations?.find(({ id }: {id:string}) => id === 'label-width')?.value}
-          <input type='number' min={1} className='rounded-[4px] px-[20px] py-[14px] border border-[#D6D6D6] bg-ed-white text-[15px] leading-[20px]' value={inputSize[0]} onChange={e => setSize([e.target.valueAsNumber, inputSize[1] ?? 1])} />
+          <input type='number' min={1} className='rounded-[4px] px-[20px] py-[14px] border border-[#D6D6D6] bg-ed-white text-[15px] leading-[20px]' value={inputSize[0] ?? ''} onChange={e => setSize([e.target.valueAsNumber, inputSize[1] ?? 1])} />
         </label>
         <label className='text-[15px] leading-[20px] flex flex-col flex-1 text-left'>
           {translations?.find(({ id }: {id:string}) => id === 'label-height')?.value}
-          <input type='number' min={1} className='rounded-[4px] px-[20px] py-[14px] border border-[#D6D6D6] bg-ed-white text-[15px] leading-[20px]' value={inputSize[1]} onChange={e => setSize([inputSize[0] ?? 1, e.target.valueAsNumber])}  />
+          <input type='number' min={1} className='rounded-[4px] px-[20px] py-[14px] border border-[#D6D6D6] bg-ed-white text-[15px] leading-[20px]' value={inputSize[1] ?? ''} onChange={e => setSize([inputSize[0] ?? 1, e.target.valueAsNumber])}  />
         </label>
         </div>
 

@@ -12,3 +12,9 @@ export enum VIEW {
 };
 
 export type RoomSize = [number, number];
+
+export type Model = {
+  name: string;
+  id: string;
+  rotation: number;
+};

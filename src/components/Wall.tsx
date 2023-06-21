@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { Plane } from '@react-three/drei';
 
 import { DIRECTION } from '../types';
-import { TextureContext } from '../context/TextureContext';
+// import { TextureContext } from '../context/TextureContext';
 import { AppContext } from '../context/AppContext';
 
 export interface WallProps {
@@ -22,9 +22,12 @@ export function Wall({ roomSize, direction, color }: WallProps) {
     if (texture) {
       const textureLoader = new THREE.TextureLoader()
       textureLoader.load(texture, (t) => {
-        materialRef.current.map = t
-        materialRef.current.needsUpdate = true
+        materialRef.current.map = t;
+        materialRef.current.needsUpdate = true;
       })
+    } else {
+      materialRef.current.map = null;
+      materialRef.current.needsUpdate = true;
     }
   }, [texture])
 

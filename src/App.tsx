@@ -10,25 +10,31 @@ import { Configurator } from './components/Configurator';
 import addPhotoIcon from './assets/add-photo.svg';
 import productsIcon from './assets/products.svg';
 import sizeIcon from './assets/size.svg';
-import { RoomSize, VIEW } from './types';
+import { Model, RoomSize, VIEW } from './types';
 
 import { AppContext } from './context/AppContext';
 import { fetcher } from './utils/fetcher';
-
+import { useModels } from './components/useModels';
 
 export const API = {
   translations: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/cms/pages/mobile?path=settings',
   categories: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/categories',
   products: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/products/search',
+  // products: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/products/search/configurator',
 };
 
 
 function App() {
-  const [view, setView] = useState<VIEW>();
+  const [view, setView] = useState<VIEW>(VIEW.Size);
   const [roomSize, setRoomSize] = useState<RoomSize>();
   const [texture, setTexture] = useState<string>('');
-  const [models, setModels] = useState<any[]>();
-  const [activeSection, setActiveSection] = useState(true);
+  // const [listOfModels, setListOfModels] = useState<string[]>([]);
+  const [models, setModels] = useState<Model[]>([]);
+  const [activeSection, setActiveSection] = useState(false);
+  const [selectedItem, setSelectedItem] = useState('');
+  const [tooltip, setTooltip] = useState(false);
+
+  const [addLoadedModel, loadedModels] = useModels();
 
   const { data: translationsData, error:_translationsDataError, isLoading: translationsDataIsLoading } = useSWR(API.translations, fetcher);
   const translations = translationsData?.contentSections[0].properties;
@@ -36,6 +42,11 @@ function App() {
 
   const handleTextureImage = (texture:string) => {
     setTexture(texture);
+  };
+
+  const addModel = (model:Model) => {
+    addLoadedModel(model.name);
+    setModels((state) => [...state, model]);
   }
 
   return (
@@ -45,18 +56,43 @@ function App() {
       models,
       texture,
       roomSize,
+      loadedModels,
     }}>
     <main className="bg-[#EBECED] font-manrope text-ed-black2 flex flex-col min-h-screen">
 
-      {roomSize ? <Configurator /> : <Placeholder />}
+      <div onClick={() => setActiveSection(false)}>{roomSize ? <Configurator selectedItem={selectedItem} setSelectedItem={setSelectedItem} /> : <Placeholder onClick={() => setActiveSection(true)} />}</div>
 
-      <section className={`bg-ed-white text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] font-manrope px-4 py-[60px] mt-auto pb-[150px] absolute inset-0 transition-transform ${activeSection ? "translate-y-[50vh]" : "translate-y-[calc(100vh_-_150px)]"}`}>
+      <section 
+        className={`bg-ed-white text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] font-manrope px-4 py-[60px] mt-auto pb-[150px] absolute top-0 left-0 right-0 bottom-auto min-h-[50vh] transition-transform ${activeSection ? "translate-y-[50vh]" : "translate-y-[calc(100vh_-_150px)]"}`}
+        onClick={() => setActiveSection(true)}
+      >
 
-        <button type='button' className='rounded-full w-[100px] h-[10px] bg-[#ECEDEE] absolute top-4 left-[50%] -translate-x-1/2' onClick={() => setActiveSection(!activeSection)}></button>
+      {roomSize && (
+        <button
+         type='button' 
+         className='absolute top-0 left-[1rem] translate-y-[calc(-100%_-_10px)] flex gap-1 rounded-[4px] bg-ed-white px-2 py-4 hover:bg-ed-yellow cursor-pointer'
+         onClick={() => setTooltip(!tooltip)}
+         >
+          <span className='block w-2 h-2 rounded-full border border-ed-black2'></span>
+          <span className='block w-2 h-2 rounded-full border border-ed-black2'></span>
+          <span className='block w-2 h-2 rounded-full border border-ed-black2'></span>
+
+          {tooltip && <ul className='absolute bg-ed-white rounded-[4px] p-4 flex flex-col shadow-sm bottom-full left-0 mb-[10px]'>
+            <li className='font-manrope text-sm whitespace-nowrap text-ed-error' onClick={() => {
+              setTooltip(false);
+              setModels([]);
+              setSelectedItem('');
+              setTexture('')
+            }}>Usuń szablon</li>
+          </ul>}
+        </button>
+      )}
+
+        <div className='rounded-full w-[100px] h-[10px] bg-[#ECEDEE] absolute top-4 left-[50%] -translate-x-1/2'></div>
 
         {view === VIEW.Size && <Size size={roomSize} setSize={setRoomSize} />}
         {view === VIEW.Photo && <Photo setImage={handleTextureImage} />}
-        {view === VIEW.Products && <Products />}
+        {view === VIEW.Products && <Products addModel={addModel} />}
             
       </section>
 

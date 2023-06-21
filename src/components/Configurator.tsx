@@ -1,6 +1,6 @@
-import React, { useState, Suspense, useEffect, useContext } from 'react';
+import React, { Suspense, useContext } from 'react';
 
-import { useControls, folder } from 'leva';
+// import { useControls, folder } from 'leva';
 
 import * as THREE from 'three';
 import { Canvas} from '@react-three/fiber';
@@ -8,31 +8,30 @@ import { Box, OrbitControls, Bounds} from '@react-three/drei';
 import { Selection, Select, EffectComposer, Outline } from '@react-three/postprocessing';
 // import { nanoid } from 'nanoid';
 
-import { TextureContext } from './context/TextureContext';
+// import { TextureContext } from './context/TextureContext';
 
 // import { Room, DraggableObject } from './components';
-import { useModels } from './components/useModels';
+// import { useModels } from './components/useModels';
 import { Room, DraggableObject } from '.';
 import { AppContext } from '../context/AppContext';
+import { Model } from '../types';
 
-export const Configurator = () => {
+const floorColor = '#aaa';
+const wallsColor = '#fff';
 
-  const { roomSize: roomSizeFromContext} = useContext(AppContext);
+type ConfiguratorProps = {
+  selectedItem: string;
+  setSelectedItem: (id: string) => void;
+}
 
-  const [{floorColor, wallsColor}, set] = useControls(() => ({
-    'Room': folder({
-      // roomSize: [8, 3, 6],
-      floorColor: '#aaa',
-      wallsColor: '#fff',
-    })
-  }))
+export const Configurator:React.FC<ConfiguratorProps> = ({ selectedItem, setSelectedItem}) => {
+
+  const { roomSize: roomSizeFromContext, models, loadedModels } = useContext(AppContext);
+
+  // const [selectedItem, setSelectedItem] = useState('');
 
   const roomSize = [...roomSizeFromContext, 6] as [number, number, number];
 
-  // const { backgroundColor } = useControls('Misc', {
-  //   backgroundColor: '#103045',
-  // });
- 
   const [orbitControlsDisabled, setOrbitControlsDisabled] = React.useState(false);
 
   const roomBounds = React.useMemo(() => ({
@@ -41,6 +40,20 @@ export const Configurator = () => {
   }), [roomSize]);
 
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  // const handleDblClick = (_e:any, id: string) => {
+  //   setSelectedItem(selectedItem => selectedItem ? '' : id);
+  // }
+
+  // const removeHandler = (id:string) => {
+  //   setSelectedItem('');
+  //   const newState = models.filter(model => model.id !== id);
+  //   setModels(newState);
+  // };
+
+  // const rotateHandler = (id:string) => {
+  //   setModels(state => (state.map(model => model.id === id ? {...model, rotation: model.rotation + 90} : model)));
+  // };
 
   return (
     <div className='h-screen'>
@@ -58,13 +71,13 @@ export const Configurator = () => {
               </EffectComposer>
 
             <Suspense>
-            {/* {
-              models.map((model) => {
+            {
+              models.map((model:Model, idx: number) => {
                 const Model = loadedModels[model.name] as any;
-                return Model ? (<DraggableObject key={model.id} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={(e:any) => handleDblClick(e, model.id)}><Select enabled={model.id === selectedItem}><Box castShadow receiveShadow scale={0.0125} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></Box></Select></DraggableObject>) : null;
+                return Model ? (<DraggableObject key={`${model.id}-${idx}`} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={() => setSelectedItem(selectedItem ? '' : model.id)}><Select enabled={model.id === selectedItem}><Box castShadow receiveShadow scale={0.0125} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></Box></Select></DraggableObject>) : null;
               
             })
-            } */}
+            }
           </Suspense>
 
             </Selection>
