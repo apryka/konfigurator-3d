@@ -10,11 +10,15 @@ import { Configurator } from './components/Configurator';
 import addPhotoIcon from './assets/add-photo.svg';
 import productsIcon from './assets/products.svg';
 import sizeIcon from './assets/size.svg';
+import addIcon from './assets/add.svg';
+import subtractIcon from './assets/subtract.svg';
+
 import { Model, RoomSize, VIEW } from './types';
 
 import { AppContext } from './context/AppContext';
 import { fetcher } from './utils/fetcher';
 import { useModels } from './components/useModels';
+import useOutsideClick from './hooks/useOutsideClick';
 
 export const API = {
   translations: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/cms/pages/mobile?path=settings',
@@ -33,12 +37,15 @@ function App() {
   const [activeSection, setActiveSection] = useState(false);
   const [selectedItem, setSelectedItem] = useState('');
   const [tooltip, setTooltip] = useState(false);
+  const [zoom, setZoom] = useState(1);
 
   const [addLoadedModel, loadedModels] = useModels();
 
   const { data: translationsData, error:_translationsDataError, isLoading: translationsDataIsLoading } = useSWR(API.translations, fetcher);
   const translations = translationsData?.contentSections[0].properties;
   const { data: categoriesData, error:_categoriesDataError, isLoading: _categoriesDataIsLoading } = useSWR(API.categories, fetcher);
+
+  const buttonRef = useOutsideClick(() => setTooltip(false));
 
   const handleTextureImage = (texture:string) => {
     setTexture(texture);
@@ -57,10 +64,16 @@ function App() {
       texture,
       roomSize,
       loadedModels,
+      zoom,
     }}>
     <main className="bg-[#EBECED] font-manrope text-ed-black2 flex flex-col min-h-screen">
 
       <div onClick={() => setActiveSection(false)}>{roomSize ? <Configurator selectedItem={selectedItem} setSelectedItem={setSelectedItem} /> : <Placeholder onClick={() => setActiveSection(true)} />}</div>
+
+      {roomSize && <div className='flex gap-4 absolute right-[20px] top-[20px]'>
+        <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={() => setZoom(zoom => zoom === 1 ? zoom : zoom-=1)}><img src={subtractIcon} alt="add" className='w-[20px] h-[20px]' /></button>
+        <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={() => setZoom(zoom => zoom+=1)}><img src={addIcon} alt="add" className='w-[20px] h-[20px]' /></button>
+      </div>}
 
       <section 
         className={`bg-ed-white text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] font-manrope px-4 py-[60px] mt-auto pb-[150px] absolute top-0 left-0 right-0 bottom-auto min-h-[50vh] transition-transform ${activeSection ? "translate-y-[50vh]" : "translate-y-[calc(100vh_-_150px)]"}`}
@@ -69,7 +82,8 @@ function App() {
 
       {roomSize && (
         <button
-         type='button' 
+         type='button'
+         ref={buttonRef as React.LegacyRef<HTMLButtonElement> | undefined}
          className='absolute top-0 left-[1rem] translate-y-[calc(-100%_-_10px)] flex gap-1 rounded-[4px] bg-ed-white px-2 py-4 hover:bg-ed-yellow cursor-pointer'
          onClick={(e) => {
             e.stopPropagation();
@@ -93,7 +107,7 @@ function App() {
 
         <div className='rounded-full w-[100px] h-[10px] bg-[#ECEDEE] absolute top-4 left-[50%] -translate-x-1/2'></div>
 
-        {view === VIEW.Size && <Size size={roomSize} setSize={setRoomSize} />}
+        {view === VIEW.Size && <Size setSize={setRoomSize} />}
         {view === VIEW.Photo && <Photo setImage={handleTextureImage} />}
         {view === VIEW.Products && <Products addModel={addModel} />}
             

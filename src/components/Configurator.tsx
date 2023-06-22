@@ -24,7 +24,7 @@ type ConfiguratorProps = {
   setSelectedItem: (id: string) => void;
 }
 
-export const Configurator:React.FC<ConfiguratorProps> = ({ selectedItem, setSelectedItem}) => {
+export const Configurator:React.FC<ConfiguratorProps> = ({ selectedItem, setSelectedItem }) => {
 
   const { roomSize: roomSizeFromContext, models, loadedModels } = useContext(AppContext);
 
