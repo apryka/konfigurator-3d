@@ -12,6 +12,7 @@ import productsIcon from './assets/products.svg';
 import sizeIcon from './assets/size.svg';
 import addIcon from './assets/add.svg';
 import subtractIcon from './assets/subtract.svg';
+import rotateIcon from './assets/rotate.svg';
 
 import { Model, RoomSize, VIEW } from './types';
 
@@ -54,7 +55,12 @@ function App() {
   const addModel = (model:Model) => {
     addLoadedModel(model.name);
     setModels((state) => [...state, model]);
-  }
+  };
+
+  const rotateHandler = () => {
+    if (!selectedItem) return;
+    setModels(state => (state.map(model => model.id === selectedItem ? {...model, rotation: model.rotation + 90} : model)));
+  };
 
   return (
     <AppContext.Provider value={{
@@ -71,6 +77,7 @@ function App() {
       <div onClick={() => setActiveSection(false)}>{roomSize ? <Configurator selectedItem={selectedItem} setSelectedItem={setSelectedItem} /> : <Placeholder onClick={() => setActiveSection(true)} />}</div>
 
       {roomSize && <div className='flex gap-4 absolute right-[20px] top-[20px]'>
+        {selectedItem && <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={rotateHandler}><img src={rotateIcon} alt="add" className='w-[20px] h-[20px]' /></button>}
         <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={() => setZoom(zoom => zoom === 1 ? zoom : zoom-=1)}><img src={subtractIcon} alt="add" className='w-[20px] h-[20px]' /></button>
         <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={() => setZoom(zoom => zoom+=1)}><img src={addIcon} alt="add" className='w-[20px] h-[20px]' /></button>
       </div>}
