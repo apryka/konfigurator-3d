@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import { Photo } from './views/Photo';
@@ -20,6 +20,7 @@ import { AppContext } from './context/AppContext';
 import { fetcher } from './utils/fetcher';
 import { useModels } from './components/useModels';
 import useOutsideClick from './hooks/useOutsideClick';
+import { useScreenOrientation } from './hooks/useScreenOrientation';
 
 export const API = {
   translations: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/cms/pages/mobile?path=settings',
@@ -39,6 +40,7 @@ function App() {
   const [selectedItem, setSelectedItem] = useState('');
   const [tooltip, setTooltip] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const [showControls, setShowControls] = useState(true);
 
   const [addLoadedModel, loadedModels] = useModels();
 
@@ -47,6 +49,15 @@ function App() {
   const { data: categoriesData, error:_categoriesDataError, isLoading: _categoriesDataIsLoading } = useSWR(API.categories, fetcher);
 
   const buttonRef = useOutsideClick(() => setTooltip(false));
+  const orientation = useScreenOrientation();
+
+  useEffect(() => {
+    if (orientation === 'landscape-primary' || orientation === 'landscape-secondary') {
+      setShowControls(false);
+    } else {
+      setShowControls(true);
+    }
+  }, [orientation]);
 
   const handleTextureImage = (texture:string) => {
     setTexture(texture);
@@ -78,12 +89,12 @@ function App() {
 
       {roomSize && <div className='flex gap-4 absolute right-[20px] top-[20px]'>
         {selectedItem && <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={rotateHandler}><img src={rotateIcon} alt="add" className='w-[20px] h-[20px]' /></button>}
-        <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={() => setZoom(zoom => zoom === 1 ? zoom : zoom-=1)}><img src={subtractIcon} alt="add" className='w-[20px] h-[20px]' /></button>
-        <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={() => setZoom(zoom => zoom+=1)}><img src={addIcon} alt="add" className='w-[20px] h-[20px]' /></button>
+        <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={() => setZoom(zoom => zoom === 1 ? zoom : zoom-0.1)}><img src={subtractIcon} alt="add" className='w-[20px] h-[20px]' /></button>
+        <button type='button' className='rounded-[4px] bg-ed-white p-[10px] cursor-pointer' onClick={() => setZoom(zoom => zoom+0.1)}><img src={addIcon} alt="add" className='w-[20px] h-[20px]' /></button>
       </div>}
 
       <section 
-        className={`bg-ed-white text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] font-manrope px-4 py-[60px] mt-auto pb-[150px] absolute top-0 left-0 right-0 bottom-auto min-h-[50vh] transition-transform ${activeSection ? "translate-y-[50vh]" : "translate-y-[calc(100vh_-_150px)]"}`}
+        className={`bg-ed-white text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] font-manrope px-4 py-[60px] mt-auto pb-[150px] absolute top-0 left-0 right-0 bottom-auto min-h-[50vh] transition-transform ${activeSection ? "translate-y-[50vh]" : "translate-y-[calc(100vh_-_150px)]"} ${showControls ? "block" : "hidden"}`}
         onClick={() => setActiveSection(true)}
       >
 
@@ -120,7 +131,7 @@ function App() {
             
       </section>
 
-      <div className='fixed z-20 bottom-0 left-0 w-full bg-[#dedede] text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] h-[90px]'>
+      <div className={`fixed z-20 bottom-0 left-0 w-full bg-[#dedede] text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] h-[90px] ${showControls ? "block" : "hidden"}`}>
         <nav>
           <ul className='flex gap-4 items-center justify-center text-sm leading-tight'>
             <li>

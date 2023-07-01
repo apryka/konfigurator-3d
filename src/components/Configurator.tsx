@@ -16,6 +16,10 @@ import { Room, DraggableObject } from '.';
 import { AppContext } from '../context/AppContext';
 import { Model } from '../types';
 
+// import { Stand } from '../models/Stand';
+// import StandKartonowy from '../models/StandKartonowy';
+// import Bulldog3 from '../models/Bulldog3';
+
 const floorColor = '#aaa';
 const wallsColor = '#fff';
 
@@ -55,6 +59,11 @@ export const Configurator:React.FC<ConfiguratorProps> = ({ selectedItem, setSele
   //   setModels(state => (state.map(model => model.id === id ? {...model, rotation: model.rotation + 90} : model)));
   // };
 
+  // const controlsRef = React.useRef();
+  // if (controlsRef.current) {
+  //   controlsRef.current.zoomIn();
+  // }
+
   return (
     <div className='h-screen'>
     <Canvas shadows ref={canvasRef}>
@@ -74,7 +83,7 @@ export const Configurator:React.FC<ConfiguratorProps> = ({ selectedItem, setSele
             {
               models.map((model:Model, idx: number) => {
                 const Model = loadedModels[model.name] as any;
-                return Model ? (<DraggableObject key={`${model.id}-${idx}`} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={() => setSelectedItem(selectedItem ? '' : model.id)}><Select enabled={model.id === selectedItem}><Box castShadow receiveShadow scale={0.0125} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></Box></Select></DraggableObject>) : null;
+                return Model ? (<DraggableObject key={`${model.id}-${idx}`} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={() => setSelectedItem(selectedItem ? '' : model.id)}><Select enabled={model.id === selectedItem}><Box castShadow receiveShadow scale={3} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></Box></Select></DraggableObject>) : null; // scale for Bulldog 0.0125
               
             })
             }
@@ -82,6 +91,7 @@ export const Configurator:React.FC<ConfiguratorProps> = ({ selectedItem, setSele
 
             </Selection>
           
+            {/* <Box castShadow receiveShadow scale={0.0125} position={[0,0,0]} rotation={[0, 0, 0]}><Stand /></Box> */}
 
           
         </Bounds>

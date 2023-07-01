@@ -13,13 +13,13 @@ export interface RoomProps {
 }
 
 export function Room({ roomSize, floorColor, wallsColor }: RoomProps) {
-  const { camera } = useThree();
+  const { controls } = useThree();
   const { zoom } = useContext(AppContext);
 
   useEffect(() => {
-    if (typeof zoom === 'number') {
-      console.log(zoom, camera);
-      camera.zoom = zoom;
+    if (typeof zoom === 'number' && (controls as any)?.object && (controls as any)?.object?.zoom && (controls as any)?.object?.updateProjectionMatrix) {
+      (controls as any).object.zoom = zoom;
+      (controls as any).object.updateProjectionMatrix();
     }
   }, [zoom]);
 

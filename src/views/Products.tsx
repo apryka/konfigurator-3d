@@ -31,7 +31,7 @@ export const Products:React.FC<ProductsProps> = ({ addModel }) => {
       <h3 className='font-noto italic text-[18px] mb-6 text-left'>{translations?.find(({ id }: {id:string}) => id === 'title-select-category')?.value}</h3>
 
       <ul className="flex gap-2 snap-x snap-mandatory scroll-pb-1 max-w-full overflow-x-auto mb-[24px]">
-        {categories.map(({id, name, path: _path}: {id: string, name: string, path:string}) => (
+        {categories?.map(({id, name, path: _path}: {id: string, name: string, path:string}) => (
           <li key={id}>
             <button type="button" className={`rounded-[4px] px-2 py-4 whitespace-nowrap font-semibold ${activeCategory === name ? "bg-ed-yellow" : "bg-[#f2f2f2]"}`} onClick={() => setActiveCategory(name)}>{name}</button>
           </li>
@@ -40,7 +40,7 @@ export const Products:React.FC<ProductsProps> = ({ addModel }) => {
       
       <ul className="grid grid-cols-2 gap-x-2 gap-y-4">
         {filteredProducts?.map(({id, images, name, path: _path}: {id: string, images: any, name:string, path: string}) => (
-          <li key={id} onClick={() => addModel({ name:'Bulldog3', id, rotation: 0})}>
+          <li key={id} onClick={() => addModel({ name:'Stand', id, rotation: 0})}>
             <img src={images[0]?.src} alt={images[0]?.alt} />
             <p className="font-manrope text-base text-ed-black2">{name}</p>
           </li>
