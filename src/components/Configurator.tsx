@@ -16,12 +16,12 @@ import { Room, DraggableObject } from '.';
 import { AppContext } from '../context/AppContext';
 import { Model } from '../types';
 
-// import { Stand } from '../models/Stand';
+// import Stand from '../models/Stand';
 // import StandKartonowy from '../models/StandKartonowy';
 // import Bulldog3 from '../models/Bulldog3';
-// import { KoncowkaRegalu } from '../models/KoncowkaRegalu';
-// import { KoszZasypowy } from '../models/KoszZasypowy';
-// import { ObudowaSlupa } from '../models/ObudowaSlupa';
+// import KoncowkaRegalu from '../models/KoncowkaRegalu';
+// import KoszZasypowy from '../models/KoszZasypowy';
+// import ObudowaSlupa from '../models/ObudowaSlupa';
 
 const floorColor = '#aaa';
 const wallsColor = '#fff';

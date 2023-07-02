@@ -4,6 +4,8 @@ import useSWR from "swr";
 import { API } from "../App";
 import { fetcher } from "../utils/fetcher";
 import { Model } from "../types";
+import { list } from "../models";
+import { nanoid } from "nanoid";
 
 type ProductsProps = {
   addModel: (model:Model) => void;
@@ -14,9 +16,22 @@ export const Products:React.FC<ProductsProps> = ({ addModel }) => {
   const [activeCategory, setActiveCategory] = useState('');
   const [filterInput, setFilterInput] = useState('');
 
-  const { data, error: _error, isLoading: _isLoading } = useSWR(() => activeCategory ? `${API.products}/Filter?Category=${encodeURI(activeCategory)}` : null, fetcher);
+  const { data, error: _error, isLoading: _isLoading } = useSWR(() => activeCategory ? `${API.products}?category=${encodeURI(activeCategory)}` : null, fetcher);
 
   const filteredProducts = filterInput ? data?.products.filter(({ name }: { name: string}) => name.includes(filterInput)) : data?.products;
+
+  const handleModelClick = (configuratorVariants: any[]) => {
+    if (Array.isArray(configuratorVariants) && configuratorVariants.length) {
+      const { objectId } = configuratorVariants[0];
+
+      if (list.includes(objectId)) {
+        addModel({ name: objectId, id: nanoid(), rotation: 0});
+      } else {
+        return null;
+      }
+    }
+    return null;
+  }
   
   return (
     <>
@@ -39,8 +54,9 @@ export const Products:React.FC<ProductsProps> = ({ addModel }) => {
       </ul>
       
       <ul className="grid grid-cols-2 gap-x-2 gap-y-4">
-        {filteredProducts?.map(({id, images, name, path: _path}: {id: string, images: any, name:string, path: string}) => (
-          <li key={id} onClick={() => addModel({ name:'Stand', id, rotation: 0})}>
+        {filteredProducts?.map(({id, images, name, path: _path, configuratorVariants}: {id: string, images: any, name:string, path: string, configuratorVariants: any[]}) => (
+          // <li key={id} onClick={() => addModel({ name:'Stand', id, rotation: 0})}>
+          <li key={id} onClick={() => handleModelClick(configuratorVariants)}>
             <img src={images[0]?.src} alt={images[0]?.alt} />
             <p className="font-manrope text-base text-ed-black2">{name}</p>
           </li>
