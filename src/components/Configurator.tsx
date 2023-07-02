@@ -19,6 +19,9 @@ import { Model } from '../types';
 // import { Stand } from '../models/Stand';
 // import StandKartonowy from '../models/StandKartonowy';
 // import Bulldog3 from '../models/Bulldog3';
+// import { KoncowkaRegalu } from '../models/KoncowkaRegalu';
+// import { KoszZasypowy } from '../models/KoszZasypowy';
+// import { ObudowaSlupa } from '../models/ObudowaSlupa';
 
 const floorColor = '#aaa';
 const wallsColor = '#fff';
@@ -91,7 +94,7 @@ export const Configurator:React.FC<ConfiguratorProps> = ({ selectedItem, setSele
 
             </Selection>
           
-            {/* <Box castShadow receiveShadow scale={0.0125} position={[0,0,0]} rotation={[0, 0, 0]}><Stand /></Box> */}
+            {/* <Box castShadow receiveShadow scale={4} position={[0,0,0]} rotation={[0, 0, 0]}><ObudowaSlupa /></Box> */}
 
           
         </Bounds>
