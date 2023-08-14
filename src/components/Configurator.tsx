@@ -4,7 +4,7 @@ import React, { Suspense, useContext } from 'react';
 
 import * as THREE from 'three';
 import { Canvas} from '@react-three/fiber';
-import { Box, OrbitControls, Bounds} from '@react-three/drei';
+import { OrbitControls, Bounds} from '@react-three/drei';
 import { Selection, Select, EffectComposer, Outline } from '@react-three/postprocessing';
 // import { nanoid } from 'nanoid';
 
@@ -15,6 +15,9 @@ import { Selection, Select, EffectComposer, Outline } from '@react-three/postpro
 import { Room, DraggableObject } from '.';
 import { AppContext } from '../context/AppContext';
 import { Model } from '../types';
+// import ModelStandKartonowy from '../models/Stand-kartonowy';
+// import ModelsDisplayNaladowy from '../models/DisplayNaladowy';
+// import Krawat from '../models/Krawat';
 
 // import Stand from '../models/Stand';
 // import StandKartonowy from '../models/StandKartonowy';
@@ -79,22 +82,24 @@ export const Configurator:React.FC<ConfiguratorProps> = ({ selectedItem, setSele
 
             <Selection>
               <EffectComposer multisampling={8} autoClear={false}>
-                <Outline blur visibleEdgeColor={0xffffff} edgeStrength={100} width={500} />
+                <Outline blur visibleEdgeColor={0xffffff} edgeStrength={50} width={1000} />
               </EffectComposer>
 
             <Suspense>
             {
               models.map((model:Model, idx: number) => {
                 const Model = loadedModels[model.name] as any;
-                return Model ? (<DraggableObject key={`${model.id}-${idx}`} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={() => setSelectedItem(selectedItem ? '' : model.id)}><Select enabled={model.id === selectedItem}><Box castShadow receiveShadow scale={3} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></Box></Select></DraggableObject>) : null; // scale for Bulldog 0.0125
+                // return Model ? (<DraggableObject key={`${model.id}-${idx}`} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={() => setSelectedItem(selectedItem ? '' : model.id)}><Select enabled={model.id === selectedItem}><Box castShadow receiveShadow scale={3} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></Box></Select></DraggableObject>) : null; // scale for Bulldog 0.0125
+                return Model ? (<DraggableObject key={`${model.id}-${idx}`} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={() => setSelectedItem(selectedItem ? '' : model.id)}><Select enabled={model.id === selectedItem}><group dispose={null} castShadow receiveShadow scale={10} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></group></Select></DraggableObject>) : null; // scale for Bulldog 0.0125
               
             })
             }
-          </Suspense>
+            </Suspense>
 
             </Selection>
           
-            {/* <Box castShadow receiveShadow scale={4} position={[0,0,0]} rotation={[0, 0, 0]}><ObudowaSlupa /></Box> */}
+            {/* <Box castShadow receiveShadow scale={4} position={[0,0,0]} rotation={[0, 0, 0]}><ModelsDisplayNaladowy /></Box> */}
+            {/* <group dispose={null} castShadow receiveShadow scale={40} position={[1,1,0]}><Krawat position={[0,0,0]} /></group> */}
 
           
         </Bounds>
