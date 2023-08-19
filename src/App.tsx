@@ -138,31 +138,40 @@ function App() {
             
       </section>
 
-      <div className={`fixed z-20 bottom-0 left-0 w-full bg-[#dedede] text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] h-[90px] ${showControls ? "block" : "hidden"}`}>
+      <div className={`fixed z-20 bottom-0 left-0 w-full bg-[#dedede] text-ed-black2 rounded-tl-[30px] rounded-tr-[30px] h-[90px] flex justify-center items-center ${showControls ? "block" : "hidden"}`}>
         <nav>
-          <ul className='flex gap-4 items-center justify-center text-sm leading-tight'>
-            <li>
+          <ul className='grid grid-cols-3 gap-4 items-center justify-center text-sm leading-tight'>
+            <li className='inline-block'>
               <button 
-                className={`bg-none bg-transparent rounded-0 border-0 flex items-center flex-col p-[20px] px-[10px] transition-opacity ${view === VIEW.Size ? "opacity-100" : "opacity-50"}`}
-                onClick={() => setView(VIEW.Size)}    
+                className={`w-full rounded-0 border-0 flex items-center flex-col p-[10px] transition-opacity ${view === VIEW.Size ? "opacity-100 bg-ed-yellow" : "opacity-50 bg-none bg-transparent"}`}
+                onClick={() => {
+                  setView(VIEW.Size);
+                  setActiveSection(true);
+                }}    
               >
                 <img src={sizeIcon} alt='wymiary lokalu' className='w-[25px] mb-2' />
                 {!translationsDataIsLoading && <span>{translations?.find(({ id }: {id:string}) => id === 'menu-store-size')?.value}</span>}
               </button>
             </li>
-            <li>
+            <li className='inline-block'>
               <button 
-                className={`bg-none bg-transparent rounded-0 border-0 flex items-center flex-col py-[20px] px-[10px] transition-opacity ${view === VIEW.Photo ? "opacity-100" : "opacity-50"}`}
-                onClick={() => setView(VIEW.Photo)}  
+                className={`w-full rounded-0 border-0 flex items-center flex-col p-[10px] transition-opacity ${view === VIEW.Photo ? "opacity-100 bg-ed-yellow" : "opacity-50 bg-none bg-transparent"}`}
+                onClick={() => {
+                  setView(VIEW.Photo);
+                  setActiveSection(true);
+                }}  
               >
                 <img src={addPhotoIcon} alt='zdjęcie lokalu' className='w-[25px] mb-2' />
                 {!translationsDataIsLoading && <span>{translations?.find(({ id }: {id:string}) => id === 'menu-photo')?.value}</span>}
               </button>
             </li>
-            <li>
+            <li className='inline-block'>
               <button 
-                className={`bg-none bg-transparent rounded-0 border-0 flex items-center flex-col p-[20px] px-[10px] transition-opacity ${view === VIEW.Products ? "opacity-100" : "opacity-50"}`}
-                onClick={() => setView(VIEW.Products)}  
+                className={`w-full rounded-0 border-0 flex items-center flex-col p-[10px] transition-opacity ${view === VIEW.Products ? "opacity-100 bg-ed-yellow" : "opacity-50 bg-none bg-transparent"}`}
+                onClick={() => {
+                  setView(VIEW.Products);
+                  setActiveSection(true);
+                }}  
               >
                 <img src={productsIcon} alt='dostępne produkty' className='w-[25px] mb-2' />
                 {!translationsDataIsLoading && <span>{translations?.find(({ id }: {id:string}) => id === 'menu-products')?.value}</span>}

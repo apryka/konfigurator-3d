@@ -4,7 +4,7 @@ export default function StandKartonowy(props:any) {
   const { nodes, materials } = useGLTF("/models/stand-kartonowy.gltf") as any;
   return (
     <group {...props} dispose={null}>
-      <group rotation={[Math.PI / 2, 0, 0.436]} scale={0.01}>
+      <group rotation={[Math.PI / 2, 0, 0.436]} scale={0.01} position={[0,0.25,0]}>
         <mesh
           castShadow
           receiveShadow

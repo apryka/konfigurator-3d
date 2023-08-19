@@ -7,7 +7,7 @@ import { useGLTF } from "@react-three/drei";
 export default function KoszZasypowy(props:any) {
   const { nodes, materials } = useGLTF("/models/kosz-zasypowy.gltf") as any;
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} position={[0,-0.2,0]}>
       <group
         position={[-0.001, 0.248, 0]}
         rotation={[Math.PI / 2, 0, 0.262]}
