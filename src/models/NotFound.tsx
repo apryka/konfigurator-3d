@@ -1,9 +1,11 @@
 // import React from "react";
 
+import { Box } from "@react-three/drei";
+
 export default function NotFound(props:any) {
   return (
-    <group {...props} dispose={null}>
+    <Box {...props} dispose={null}>
       <meshStandardMaterial color="red" />
-    </group>
+    </Box>
   );
 }

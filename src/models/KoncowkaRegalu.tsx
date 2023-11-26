@@ -7,7 +7,7 @@ import { useGLTF } from "@react-three/drei";
 export default function KoncowkaRegalu(props:any) {
   const { nodes, materials } = useGLTF("/models/koncowka-regalu.gltf") as any;
   return (
-    <group {...props} dispose={null} position={[0,-0.1,0]}>
+    <group {...props} dispose={null} position={[0,-0.4,0]}>
       <group
         position={[-0.058, 0.335, 0.059]}
         rotation={[Math.PI / 2, 0, 0]}
