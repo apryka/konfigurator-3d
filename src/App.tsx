@@ -21,13 +21,15 @@ import { fetcher } from './utils/fetcher';
 import { useModels } from './components/useModels';
 import useOutsideClick from './hooks/useOutsideClick';
 import { useScreenOrientation } from './hooks/useScreenOrientation';
+import { GetHeader, MobileHeader } from './components/MobileHeader';
 
 export const API = {
   translations: 'https://edelweiss-admin-panel.azurewebsites.net/api/v1/cms/pages/mobile?path=settings',
   categories: 'https://edelweiss-admin-panel.azurewebsites.net/api/categories',
   // products: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/products/search',
   // products: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/products/search/configurator',
-  products: 'https://edelweiss-admin-panel.azurewebsites.net/api/v1/products/search/configurator'
+  products: 'https://edelweiss-admin-panel.azurewebsites.net/api/v1/products/search/configurator',
+  header: 'https://edelweiss-admin-panel.azurewebsites.net/api/v1/cms/pages/mobile?path=header'
 };
 
 
@@ -48,9 +50,12 @@ function App() {
   const { data: translationsData, error:_translationsDataError, isLoading: translationsDataIsLoading } = useSWR(API.translations, fetcher);
   const translations = translationsData?.contentSections[0].properties;
   const { data: categoriesData, error:_categoriesDataError, isLoading: _categoriesDataIsLoading } = useSWR(API.categories, fetcher);
+  const { data: headerData } = useSWR(API.header, fetcher); console.log(headerData)
 
   const buttonRef = useOutsideClick(() => setTooltip(false));
   const orientation = useScreenOrientation();
+
+  const model = headerData ? GetHeader(headerData) : null;
 
   useEffect(() => {
     const portraitOrientation = window.matchMedia("(orientation: portrait)");
@@ -90,6 +95,7 @@ function App() {
       loadedModels,
       zoom,
     }}>
+    {model && <MobileHeader {...model} />}
     <main className="bg-[#EBECED] font-manrope text-ed-black2 flex flex-col min-h-screen">
 
       <div onClick={() => setActiveSection(false)}>{roomSize ? <Configurator selectedItem={selectedItem} setSelectedItem={setSelectedItem} /> : <Placeholder onClick={() => setActiveSection(true)} />}</div>
