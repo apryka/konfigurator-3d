@@ -53,18 +53,8 @@ function App() {
   const orientation = useScreenOrientation();
 
   useEffect(() => {
-    const portraitOrientation = window.matchMedia("(orientation: portrait)");
-    setShowControls(portraitOrientation.matches);
+    setShowControls(orientation.includes('portrait'));
   }, [orientation]);
-
-
-  // useEffect(() => {
-  //   if (orientation === 'landscape-primary' || orientation === 'landscape-secondary') {
-  //     setShowControls(false);
-  //   } else {
-  //     setShowControls(true);
-  //   }
-  // }, [orientation]);
 
   const handleTextureImage = (texture:string) => {
     setTexture(texture);

@@ -90,7 +90,7 @@ export const Configurator:React.FC<ConfiguratorProps> = ({ selectedItem, setSele
               models.map((model:Model, idx: number) => {
                 const Model = loadedModels[model.name] as any;
                 // return Model ? (<DraggableObject key={`${model.id}-${idx}`} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={() => setSelectedItem(selectedItem ? '' : model.id)}><Select enabled={model.id === selectedItem}><Box castShadow receiveShadow scale={3} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></Box></Select></DraggableObject>) : null; // scale for Bulldog 0.0125
-                return Model ? (<DraggableObject key={`${model.id}-${idx}`} bounds={roomBounds} position={[1, 1, 1]} setActive={setOrbitControlsDisabled} onDoubleClick={() => setSelectedItem(selectedItem ? '' : model.id)}><Select enabled={model.id === selectedItem}><group dispose={null} castShadow receiveShadow scale={10} position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></group></Select></DraggableObject>) : null; // scale for Bulldog 0.0125
+                return Model ? (<DraggableObject key={`${model.id}-${idx}`} bounds={roomBounds} position={[1, 0, 0]} setActive={setOrbitControlsDisabled} onDoubleClick={() => setSelectedItem(selectedItem ? '' : model.id)}><Select enabled={model.id === selectedItem}><group dispose={null} castShadow receiveShadow position={[0,0,0]} rotation={[0, model.rotation, 0]}><Model /></group></Select></DraggableObject>) : null;
               
             })
             }
