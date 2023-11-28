@@ -2,7 +2,7 @@ import { lazy, useState } from 'react';
 
 const importModel = (model: string) =>
   lazy(() =>
-    import(`../Models/${model}.tsx`)
+    import(`../models/${model}.tsx`)
     .catch(() => import(`../models/NotFound`))
     // .catch(e => console.log(e))
   );
