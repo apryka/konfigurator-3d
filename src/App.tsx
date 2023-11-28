@@ -20,7 +20,7 @@ import { AppContext } from './context/AppContext';
 import { fetcher } from './utils/fetcher';
 import { useModels } from './components/useModels';
 import useOutsideClick from './hooks/useOutsideClick';
-import { useScreenOrientation } from './hooks/useScreenOrientation';
+// import { useScreenOrientation } from './hooks/useScreenOrientation';
 
 export const API = {
   // translations: 'https://edelweiss-admin-panel.azurewebsites.net/api/v1/cms/pages/mobile?path=settings',
@@ -53,11 +53,17 @@ function App() {
   const { data: categoriesData, error:_categoriesDataError, isLoading: _categoriesDataIsLoading } = useSWR(API.categories, fetcher);
 
   const buttonRef = useOutsideClick(() => setTooltip(false));
-  const orientation = useScreenOrientation();
+  // const orientation = useScreenOrientation();
 
   useEffect(() => {
-    setShowControls(orientation.includes('portrait'));
-  }, [orientation]);
+    const pointer = window.matchMedia('(orientation: portrait)');
+    pointer.addEventListener('change', (e) => setShowControls(e.matches))
+    return () => pointer.removeEventListener('change', (e) => setShowControls(e.matches))
+  }, []);
+
+  // useEffect(() => {
+  //   setShowControls(orientation.includes('portrait'));
+  // }, [orientation]);
 
   const handleTextureImage = (texture:string) => {
     setTexture(texture);
