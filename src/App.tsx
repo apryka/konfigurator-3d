@@ -23,11 +23,14 @@ import useOutsideClick from './hooks/useOutsideClick';
 import { useScreenOrientation } from './hooks/useScreenOrientation';
 
 export const API = {
-  translations: 'https://edelweiss-admin-panel.azurewebsites.net/api/v1/cms/pages/mobile?path=settings',
-  categories: 'https://edelweiss-admin-panel.azurewebsites.net/api/categories',
+  // translations: 'https://edelweiss-admin-panel.azurewebsites.net/api/v1/cms/pages/mobile?path=settings',
+  // categories: 'https://edelweiss-admin-panel.azurewebsites.net/api/categories',
   // products: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/products/search',
   // products: 'https://edelweiss-admin-panel-staging.azurewebsites.net/api/v1/products/search/configurator',
-  products: 'https://edelweiss-admin-panel.azurewebsites.net/api/v1/products/search/configurator'
+  // products: 'https://edelweiss-admin-panel.azurewebsites.net/api/v1/products/search/configurator'
+  translations: 'https://admin-panel.edelweiss.com.pl/api/v1/cms/pages/mobile?path=settings',
+  categories: 'https://admin-panel.edelweiss.com.pl/api/categories',
+  products: 'https://admin-panel.edelweiss.com.pl/api/v1/products/search/configurator'
 };
 
 
